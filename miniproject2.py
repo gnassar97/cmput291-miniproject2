@@ -1,5 +1,7 @@
 from bsddb3 import db
 import sys
+import re
+import string
 import xml.etree.ElementTree as ET
 
 
@@ -29,30 +31,59 @@ def main():
 
 	
 
-	print("P1------------------------")
-	print root.tag, root.attrib
-	print("--------------------------")
+	#These are just some methods given in the python tutorial for element tree. I've commented in their usage.
 
-	print("P2------------------------")
-	for child in root:
-		print child.tag, child.attrib
-	print("--------------------------")
+	#print("P1------------------------")
+	#print(root.tag, root.attrib)
+	#these methods give the name and type of the root
+	#print("--------------------------")
 
-	print("P3------------------------")
-	print root[0][1].text
-	print("--------------------------")
+	#print("P2------------------------")
+	#for child in root:
+		#print(child.tag, child.attrib)
+	#this grabs the children of root, which means mail in this case. tag and attribute return as none because mail doesn't have those attributes. Its children does.
+	#print("--------------------------")
 
-	print("P4------------------------")
-	for mail in root.iter('mail'):
-		print mail.attrib
-	print("--------------------------")
+	#print("P3------------------------")
+	#print(root[0][1].text)
+	#this iterates down the tree and grabs the date value from the first email entry
+	#print("--------------------------")
 
-	print("P5------------------------")
+	#print("P4------------------------")
+	#for mail in root.iter('mail'):
+	#	print(mail.attrib)
+	#this grabs each of the mail type's attributes, not super useful because they are empty.
+	#print("--------------------------")
+
+	#print("P5------------------------")
+	#for mail in root.findall('mail'):
+	#	mailfrom = mail.find('from').text
+	#	to = mail.find('to').text
+	#	print(mailfrom, to)
+
+	#this method seems important. "find" grabs the text pertaining to whatever value you enter in quotes in each of the "mail" children of the root. 	
+	#print("--------------------------")
+
+	#bodylist = []
+	bodylist2 = []
+	#I tried both the translate and re.sub libraries to see what would be better. It looks like re.sub is better for removing special characters as we can choose what gets removed and what doesnt.
 	for mail in root.findall('mail'):
-		mailfrom = mail.find('from').text
-		to = mail.find('to').text
-		print mailfrom, to
-	print("--------------------------")
+		body = mail.find('body').text
+		lowerbody = body.lower()
+		#strippedbody = lowerbody.translate(str.maketrans('', '', string.punctuation))
+		strippedbody2 = re.sub("[,.:;'!@#$%^&*()></+]","", lowerbody)
+		#print(strippedbody)
+		#splitbody = strippedbody.split()
+		splitbody2 = strippedbody2.split()
+		#print(splitbody)
+
+		#bodylist.append(splitbody)
+		bodylist2.append(splitbody2)
+		#print body
+	#print(bodylist)
+	print(bodylist2)
+
+
 
 
 
