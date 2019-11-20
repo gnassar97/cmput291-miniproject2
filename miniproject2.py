@@ -33,33 +33,35 @@ def main():
 
 def get_terms():
 	file = open("terms.txt","w") 
-	#bodylist = []
-	bodylist2 = []
 	#I tried both the translate and re.sub libraries to see what would be better. It looks like re.sub is better for removing special characters as we can choose what gets removed and what doesnt.
 	for mail in root.findall('mail'):
 		body = mail.find('body').text
-		#subject = mail.find('subject').text
+		subject = mail.find('subj').text
 		rowid = mail.find('row').text #This gets appended on to each of the words after they're split 
-		lowerbody = body.lower()
-		#strippedbody = lowerbody.translate(str.maketrans('', '', string.punctuation))
-		strippedbody2 = re.sub("[,.:;'!@#$%^&*()></+]","", lowerbody)
-		#print(strippedbody)
-		#splitbody = strippedbody.split()
-		splitbody2 = strippedbody2.split()
-		#print(splitbody2)
-		#print(splitbody)
-
-		#bodylist.append(splitbody)
-		bodylist2.append(splitbody2)
-		for word in splitbody2:
-			if len(word) <= 2:
-				splitbody2.remove(word)
-		for term in splitbody2:
-			print("b-" + term + ":" + rowid)
-			file.write("b-" + term + ":" + rowid + "\n")
-		#print body
-	#print(bodylist)
-	#print(bodylist2)
+		
+		if subject:
+			lowersubject = subject.lower()
+			splitsubject = re.split(r'[^0-9a-zA-Z_-]', lowersubject)
+			splitsubjectnoempty = list(filter(None, splitsubject))
+			finalsubject = list(filter(lambda word: len (word) > 2, splitsubjectnoempty))
+			for i in finalsubject:			
+				print("s-" + i + ":" + rowid)
+				#print("length: " + str(len(term)))
+				file.write("s-" + i + ":" + rowid + "\n")
+		else:
+			pass
+		
+		if body:
+			lowerbody = body.lower()
+			splitbody = re.split(r'[^0-9a-zA-Z_-]', lowerbody)
+			splitbodynoempty = list(filter(None, splitbody))
+			finalbody = list(filter(lambda word: len (word) > 2, splitbodynoempty))
+			for j in finalbody:			
+				print("b-" + j + ":" + rowid)
+				#print("length: " + str(len(term)))
+				file.write("b-" + j + ":" + rowid + "\n")
+		else:
+			pass
 	file.close()
 
 
