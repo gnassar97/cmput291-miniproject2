@@ -27,8 +27,9 @@ tree = ET.parse('10.xml')
 root = tree.getroot()
 
 def main():	
-
 	get_terms()
+	get_emails()
+
 
 def get_terms():
 	file = open("terms.txt","w") 
@@ -62,6 +63,29 @@ def get_terms():
 	file.close()
 
 
+#todo: set to all lowercase
+def get_emails():
+	file = open("emails.txt", "w")
+	for mail in root.findall('mail'):
+		data = []
+		fromTxt = mail.find('from').text
+		toTxt = mail.find('to').text
+		row = mail.find('row').text
+		print("from-" + fromTxt + ":" + row)
+		print("to-" + toTxt + ":" + row)
+		file.write("from-" + fromTxt + ":" + row + "\n")
+		file.write("to-" + toTxt + ":" + row + "\n")
+
+		cc = mail.find('cc').text
+		bcc = mail.find('bcc').text
+
+		if cc != None:
+			file.write("cc-"+ cc + ":" + row + "\n")
+		
+		if bcc != None:
+			file.write("bcc-"+ bcc + ":" + row + "\n")
+
+	file.close()
 
 
 
