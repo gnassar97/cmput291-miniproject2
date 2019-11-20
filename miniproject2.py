@@ -23,12 +23,14 @@ import xml.etree.ElementTree as ET
 
 #recs.txt: This file includes one line for each email in the form of I:rec where I is the row id and rec is the full email record in XML. Here are the respective files for our input files with 10 records and 1000 records.
 
-tree = ET.parse('10.xml')
+tree = ET.parse('1k.xml')
 root = tree.getroot()
 
 def main():	
 	get_terms()
 	get_emails()
+	get_dates()
+	get_recs()
 
 
 def get_terms():
@@ -88,11 +90,24 @@ def get_emails():
 	file.close()
 
 
+def get_dates():
+	file = open("dates.txt", "w")
+	for mail in root.findall('mail'):
+		date = mail.find('date').text
+		row = mail.find('row').text
+		file.write(date + ':' + row + '\n')
+	file.close()
 
 
-
-
-
+def get_recs():
+	file = open('recs.txt', 'w')
+	for mail in root.findall('mail'):
+		row = mail.find('row').text
+		#raw_xml = str(ET.tostring(mail))
+		#stripped = re.sub('[^A-Za-z0-9]+', '&#10', raw_xml)
+		#file.write(row + ':' + stripped + '\n')
+		
+	file.close()
 
 
 
