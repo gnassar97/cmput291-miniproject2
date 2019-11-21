@@ -3,6 +3,7 @@ import sys
 import re
 import string
 import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import tostring, tostringlist
 
 
 #https://docs.python.org/2/library/xml.etree.elementtree.html
@@ -26,9 +27,12 @@ import xml.etree.ElementTree as ET
 tree = ET.parse('10.xml')
 root = tree.getroot()
 
+
 def main():	
-	get_terms()
-	get_emails()
+	#get_terms()
+	#get_emails()
+	#get_dates()
+	get_recs()
 
 
 def get_terms():
@@ -65,13 +69,14 @@ def get_terms():
 	file.close()
 
 
-#todo: set to all lowercase
 def get_emails():
 	file = open("emails.txt", "w")
 	for mail in root.findall('mail'):
 		data = []
 		fromTxt = mail.find('from').text
+		fromTxt = fromTxt.lower()
 		toTxt = mail.find('to').text
+		toTxt = toTxt.lower()
 		row = mail.find('row').text
 		print("from-" + fromTxt + ":" + row)
 		print("to-" + toTxt + ":" + row)
@@ -87,6 +92,46 @@ def get_emails():
 		if bcc != None:
 			file.write("bcc-"+ bcc + ":" + row + "\n")
 
+	file.close()
+
+
+def get_dates():
+	file = open("dates.txt", "w")
+	for mail in root.findall('mail'):
+		date = mail.find('date').text
+		row = mail.find('row').text
+		if date:
+			file.write(date + ':' + row + '\n')
+		else:
+			pass
+	file.close()
+
+
+def get_recs():
+	file = open('recs.txt', 'w')
+	#xml_str = tostringlist(root.find('mail'))
+	#mails = root.findall('.//mail')
+	#print(mails)
+
+	for mail in root.findall('mail'):
+		row = mail.find('row').text
+		body_xml = str(tostring(mail))
+		stripped_xml_left = body_xml.lstrip("b'")
+		stripped_xml_right = stripped_xml_left.rstrip("'")
+		stripped_xml_right2 = stripped_xml_right.rstrip('n')
+		stripped_xml_final = stripped_xml_right2.rstrip("\\")
+
+		print(row + ":" + stripped_xml_final)
+		file.write(row + ":" + stripped_xml_final)
+		file.write("\n")
+
+	#print(body_xml)
+	#for mail in root.findall('mail'):
+	#	row = mail.find('row').text
+		#raw_xml = str(ET.tostring(mail))
+		#stripped = re.sub('[^A-Za-z0-9]+', '&#10', raw_xml)
+		#file.write(row + ':' + stripped + '\n')
+		
 	file.close()
 
 
