@@ -1,10 +1,10 @@
 import os
+import sys
 
 def sort_files():
-    os.system('sort -u -o terms.txt terms.txt')
-    os.system('sort -u -o emails.txt emails.txt')
-    os.system('sort -u -o dates.txt dates.txt')
-
+    os.system('sort -u -o ./parsed/terms.txt ./parsed/terms.txt')
+    os.system('sort -u -o ./parsed/emails.txt ./parsed/emails.txt')
+    os.system('sort -u -o ./parsed/dates.txt ./parsed/dates.txt')
 
 def create_date_index():
     os.system('sh ./scripts/load-dates.sh')
@@ -17,10 +17,8 @@ def create_emails_index():
     os.system('sh ./scripts/load-emails.sh')
 
 
-sort_files()
-
-create_date_index()
-
-create_emails_index()
-
-create_terms_index()
+def create_idx_files():
+    sort_files()
+    create_date_index()
+    create_emails_index()
+    create_terms_index()

@@ -29,9 +29,9 @@ root = tree.getroot()
 
 
 def main():	
-	#get_terms()
-	#get_emails()
-	#get_dates()
+	get_terms()
+	get_emails()
+	get_dates()
 	get_recs()
 
 

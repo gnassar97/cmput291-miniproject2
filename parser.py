@@ -3,6 +3,7 @@ import sys
 import re
 import string
 import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import tostring, tostringlist
 
 
 #https://docs.python.org/2/library/xml.etree.elementtree.html
@@ -26,7 +27,8 @@ import xml.etree.ElementTree as ET
 tree = ET.parse('10.xml')
 root = tree.getroot()
 
-def main():	
+
+def create_parsed_files():	
 	get_terms()
 	get_emails()
 	get_dates()
@@ -34,44 +36,47 @@ def main():
 
 
 def get_terms():
-	file = open("terms.txt","w") 
-	#bodylist = []
-	bodylist2 = []
+	file = open("parsed/terms.txt","w") 
 	#I tried both the translate and re.sub libraries to see what would be better. It looks like re.sub is better for removing special characters as we can choose what gets removed and what doesnt.
 	for mail in root.findall('mail'):
 		body = mail.find('body').text
-		#subject = mail.find('subject').text
+		subject = mail.find('subj').text
 		rowid = mail.find('row').text #This gets appended on to each of the words after they're split 
-		lowerbody = body.lower()
-		#strippedbody = lowerbody.translate(str.maketrans('', '', string.punctuation))
-		strippedbody2 = re.sub("[,.:;'!@#$%^&*()></+]","", lowerbody)
-		#print(strippedbody)
-		#splitbody = strippedbody.split()
-		splitbody2 = strippedbody2.split()
-		#print(splitbody2)
-		#print(splitbody)
-
-		#bodylist.append(splitbody)
-		bodylist2.append(splitbody2)
-		for word in splitbody2:
-			if len(word) <= 2:
-				splitbody2.remove(word)
-		for term in splitbody2:
-			print("b-" + term + ":" + rowid)
-			file.write("b-" + term + ":" + rowid + "\n")
-		#print body
-	#print(bodylist)
-	#print(bodylist2)
+		
+		if subject:
+			lowersubject = subject.lower()
+			splitsubject = re.split(r'[^0-9a-zA-Z_-]', lowersubject)
+			splitsubjectnoempty = list(filter(None, splitsubject))
+			finalsubject = list(filter(lambda word: len (word) > 2, splitsubjectnoempty))
+			for i in finalsubject:			
+				print("s-" + i + ":" + rowid)
+				#print("length: " + str(len(term)))
+				file.write("s-" + i + ":" + rowid + "\n")
+		else:
+			pass
+		
+		if body:
+			lowerbody = body.lower()
+			splitbody = re.split(r'[^0-9a-zA-Z_-]', lowerbody)
+			splitbodynoempty = list(filter(None, splitbody))
+			finalbody = list(filter(lambda word: len (word) > 2, splitbodynoempty))
+			for j in finalbody:			
+				print("b-" + j + ":" + rowid)
+				#print("length: " + str(len(term)))
+				file.write("b-" + j + ":" + rowid + "\n")
+		else:
+			pass
 	file.close()
 
 
-#todo: set to all lowercase
 def get_emails():
-	file = open("emails.txt", "w")
+	file = open("parsed/emails.txt", "w")
 	for mail in root.findall('mail'):
 		data = []
 		fromTxt = mail.find('from').text
+		fromTxt = fromTxt.lower()
 		toTxt = mail.find('to').text
+		toTxt = toTxt.lower()
 		row = mail.find('row').text
 		print("from-" + fromTxt + ":" + row)
 		print("to-" + toTxt + ":" + row)
@@ -91,18 +96,38 @@ def get_emails():
 
 
 def get_dates():
-	file = open("dates.txt", "w")
+	file = open("parsed/dates.txt", "w")
 	for mail in root.findall('mail'):
 		date = mail.find('date').text
 		row = mail.find('row').text
-		file.write(date + ':' + row + '\n')
+		if date:
+			file.write(date + ':' + row + '\n')
+		else:
+			pass
 	file.close()
 
 
 def get_recs():
-	file = open('recs.txt', 'w')
+	file = open('parsed/recs.txt', 'w')
+	#xml_str = tostringlist(root.find('mail'))
+	#mails = root.findall('.//mail')
+	#print(mails)
+
 	for mail in root.findall('mail'):
 		row = mail.find('row').text
+		body_xml = str(tostring(mail))
+		stripped_xml_left = body_xml.lstrip("b'")
+		stripped_xml_right = stripped_xml_left.rstrip("'")
+		stripped_xml_right2 = stripped_xml_right.rstrip('n')
+		stripped_xml_final = stripped_xml_right2.rstrip("\\")
+
+		print(row + ":" + stripped_xml_final)
+		file.write(row + ":" + stripped_xml_final)
+		file.write("\n")
+
+	#print(body_xml)
+	#for mail in root.findall('mail'):
+	#	row = mail.find('row').text
 		#raw_xml = str(ET.tostring(mail))
 		#stripped = re.sub('[^A-Za-z0-9]+', '&#10', raw_xml)
 		#file.write(row + ':' + stripped + '\n')
@@ -111,7 +136,6 @@ def get_recs():
 
 
 
-main()
 #Get an instance of BerkeleyDB
 #test = sys.argv[1]
 #database = db.DB()
