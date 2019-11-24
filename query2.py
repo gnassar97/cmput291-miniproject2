@@ -46,7 +46,7 @@ def parse():
 def queries():
 	database = db.DB()
 	database.set_flags(db.DB_DUP)
-	database.open("te.idx", None, db.DB_BTREE, db.DB_CREATE)
+	database.open(te_file, None, db.DB_BTREE, db.DB_CREATE)
 	curs = database.cursor()
 	# create temporary table for the currently valid rows to be intersected with, must be cleared after each of the
 	# following for loops
