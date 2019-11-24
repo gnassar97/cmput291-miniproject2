@@ -1,4 +1,5 @@
 from bsddb3 import db
+from collections import defaultdict
 
 #database = db.DB()
 #DB_File = 'em.idx'
