@@ -24,9 +24,11 @@ from xml.etree.ElementTree import tostring, tostringlist
 
 #recs.txt: This file includes one line for each email in the form of I:rec where I is the row id and rec is the full email record in XML. Here are the respective files for our input files with 10 records and 1000 records.
 
-tree = ET.parse('10.xml')
-root = tree.getroot()
+xml_file = sys.argv[1]
 
+
+tree = ET.parse(xml_file)
+root = tree.getroot()
 
 def create_parsed_files():	
 	get_terms()
@@ -74,17 +76,29 @@ def get_emails():
 	for mail in root.findall('mail'):
 		data = []
 		fromTxt = mail.find('from').text
-		fromTxt = fromTxt.lower()
 		toTxt = mail.find('to').text
-		toTxt = toTxt.lower()
-		row = mail.find('row').text
-		print("from-" + fromTxt + ":" + row)
-		print("to-" + toTxt + ":" + row)
-		file.write("from-" + fromTxt + ":" + row + "\n")
-		file.write("to-" + toTxt + ":" + row + "\n")
 
+		row = mail.find('row').text
 		cc = mail.find('cc').text
 		bcc = mail.find('bcc').text
+
+		if fromTxt != None:
+			fromTxt = fromTxt.lower()
+			file.write("from-" + fromTxt + ":" + row + "\n")
+
+		if toTxt != None:
+
+			temp = toTxt.split(',')
+			count = len(temp)
+			if count == 0:
+				toTxt = toTxt.lower()
+				file.write("to-" + toTxt + ":" + row + "\n")
+
+			else:
+				for i in range(0, count):
+					toTxt = temp[i].lower()
+					file.write("to-" + toTxt + ":" + row + "\n")
+				
 
 		if cc != None:
 			file.write("cc-"+ cc + ":" + row + "\n")
