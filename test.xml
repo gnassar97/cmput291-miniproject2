@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<emails type="array">
+<mail><row>5</row><date>2000/10/05</date><from>phillip.allen@enron.com</from><to>david.delainey@enron.com,nick98anderson@gmail.com</to><subj>   and</subj><cc></cc><bcc></bcc><body>Dave, &#10;&#10; Here are the names of the west desk members by category. The origination &#10;side is very sparse. &#10;&#10;&#10;&#10;&#10;&#10;Phillip&#10;</body></mail>
+<mail><row>7</row><date>2000/10/05</date><from>phillip.allen@enron.com</from><to>david.delainey@enron.com,nick98anderson@gmail.com</to><subj> and</subj><cc></cc><bcc></bcc><body>Dave, &#10;&#10; Here are the names of the west desk members by category. The origination &#10;side is very sparse. &#10;&#10;&#10;&#10;&#10;&#10;Phillip&#10;</body></mail>
+</emails>
