@@ -8,7 +8,7 @@ queries = [
     r'\s*bcc\s*[:](?:(?!body|to|from|bcc|cc|output|subj).)*',
     r'\s*cc\s*[:](?:(?!body|to|from|bcc|cc|output|subj).)*',
     r'\s*output\s*[:](?:(?!body|to|from|bcc|cc|output|subj).)*',
-    r'\s*date\s*[\>\=](?:(?!body|to|from|bcc|cc|output|subj).)*',
+    r'\s*date\s*[\>=\<=\>\<\=](?:(?!body|to|from|bcc|cc|output|subj).)*',
 
 ]
 
@@ -21,7 +21,7 @@ query = re.sub("\s\s+" , " ", query)
 
 for regex in queries:
     match = re.findall(regex, query)
-    print(match)
+    #print(match)
     if match:
         try:
             test =  re.split("(:|>=|<=|>|<)", match[0])
@@ -36,7 +36,7 @@ for regex in queries:
 
             for i in range(1,len(wildcard)):
                 wildcards.append(wildcard[i])
-            print(wildcard)
+            
 
         except:
             proccess =  re.split("(:|>=|<=|>|<|=)", match[0])
