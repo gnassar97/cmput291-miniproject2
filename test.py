@@ -24,13 +24,13 @@ for regex in queries:
     print(match)
     if match:
         try:
-            #keyword =  re.split("(:|>=|<=|>|<)", match[0])
+            keyword = re.split("(:|>=|<=|>|<)", match)
             #values = re.split("(:|>=|<=|>|<)", match[1])
-            keyword = match[0].split(':|>=|<=|>|<')[0]
-            values = match[0].split(':|>=|<=|>|<')[1]
-            value = values.split()[0]
-            to_proccess.append([keyword,value])
-            wildcard = values.split()
+            #keyword = match[0].split(':')[0]
+            #values = match[0].split(':')[1]
+            #value = values.split()[0]
+            to_proccess.append([keyword[0],keyword[1]])
+            wildcard = keyword[1].split()
 
             for i in range(1,len(wildcard)):
                 wildcards.append(wildcard[i])
