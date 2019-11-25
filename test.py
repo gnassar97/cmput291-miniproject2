@@ -21,10 +21,13 @@ query = re.sub("\s\s+" , " ", query)
 
 for regex in queries:
     match = re.findall(regex, query)
+    print(match)
     if match:
         try:
-            keyword = match[0].split(':')[0]
-            values = match[0].split(':')[1]
+            #keyword =  re.split("(:|>=|<=|>|<)", match[0])
+            #values = re.split("(:|>=|<=|>|<)", match[1])
+            keyword = match[0].split(':|>=|<=|>|<')[0]
+            values = match[0].split(':|>=|<=|>|<')[1]
             value = values.split()[0]
             to_proccess.append([keyword,value])
             wildcard = values.split()
