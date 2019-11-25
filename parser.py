@@ -24,11 +24,13 @@ from xml.etree.ElementTree import tostring, tostringlist
 
 #recs.txt: This file includes one line for each email in the form of I:rec where I is the row id and rec is the full email record in XML. Here are the respective files for our input files with 10 records and 1000 records.
 
-tree = ET.parse('10.xml')
+xml_file = sys.argv[1]
+
+
+tree = ET.parse(xml_file)
 root = tree.getroot()
 
-
-def main():	
+def create_parsed_files():	
 	get_terms()
 	get_emails()
 	get_dates()
@@ -36,7 +38,7 @@ def main():
 
 
 def get_terms():
-	file = open("terms.txt","w") 
+	file = open("parsed/terms.txt","w") 
 	#I tried both the translate and re.sub libraries to see what would be better. It looks like re.sub is better for removing special characters as we can choose what gets removed and what doesnt.
 	for mail in root.findall('mail'):
 		body = mail.find('body').text
@@ -70,21 +72,33 @@ def get_terms():
 
 
 def get_emails():
-	file = open("emails.txt", "w")
+	file = open("parsed/emails.txt", "w")
 	for mail in root.findall('mail'):
 		data = []
 		fromTxt = mail.find('from').text
-		fromTxt = fromTxt.lower()
 		toTxt = mail.find('to').text
-		toTxt = toTxt.lower()
-		row = mail.find('row').text
-		print("from-" + fromTxt + ":" + row)
-		print("to-" + toTxt + ":" + row)
-		file.write("from-" + fromTxt + ":" + row + "\n")
-		file.write("to-" + toTxt + ":" + row + "\n")
 
+		row = mail.find('row').text
 		cc = mail.find('cc').text
 		bcc = mail.find('bcc').text
+
+		if fromTxt != None:
+			fromTxt = fromTxt.lower()
+			file.write("from-" + fromTxt + ":" + row + "\n")
+
+		if toTxt != None:
+
+			temp = toTxt.split(',')
+			count = len(temp)
+			if count == 0:
+				toTxt = toTxt.lower()
+				file.write("to-" + toTxt + ":" + row + "\n")
+
+			else:
+				for i in range(0, count):
+					toTxt = temp[i].lower()
+					file.write("to-" + toTxt + ":" + row + "\n")
+				
 
 		if cc != None:
 			file.write("cc-"+ cc + ":" + row + "\n")
@@ -96,7 +110,7 @@ def get_emails():
 
 
 def get_dates():
-	file = open("dates.txt", "w")
+	file = open("parsed/dates.txt", "w")
 	for mail in root.findall('mail'):
 		date = mail.find('date').text
 		row = mail.find('row').text
@@ -108,7 +122,7 @@ def get_dates():
 
 
 def get_recs():
-	file = open('recs.txt', 'w')
+	file = open('parsed/recs.txt', 'w')
 	#xml_str = tostringlist(root.find('mail'))
 	#mails = root.findall('.//mail')
 	#print(mails)
@@ -136,14 +150,6 @@ def get_recs():
 
 
 
-
-
-
-
-
-
-
-main()
 #Get an instance of BerkeleyDB
 #test = sys.argv[1]
 #database = db.DB()
