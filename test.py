@@ -24,21 +24,23 @@ for regex in queries:
     print(match)
     if match:
         try:
-            keyword = re.split("(:|>=|<=|>|<)", match)
-            #values = re.split("(:|>=|<=|>|<)", match[1])
+            keyword =  re.split("(:|>=|<=|>|<)", match[0])
+            values = re.split("(:|>=|<=|>|<)", match[1])
             #keyword = match[0].split(':')[0]
             #values = match[0].split(':')[1]
-            #value = values.split()[0]
-            to_proccess.append([keyword[0],keyword[1]])
-            wildcard = keyword[1].split()
+            value = values.split()[0]
+            to_proccess.append([keyword,value])
+            wildcard = values.split()
 
             for i in range(1,len(wildcard)):
                 wildcards.append(wildcard[i])
+            print(wildcard)
 
         except:
-            proccess = match[0].split(':')
+            proccess =  re.split("(:|>=|<=|>|<|=)", match[0])
+            #proccess = match[0].split('>')
             keyword = proccess[0]
-            value = proccess[1]
+            value = proccess[2]
             to_proccess.append([keyword, value])
 
 print(to_proccess)
