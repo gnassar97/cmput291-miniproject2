@@ -21,7 +21,6 @@ query = re.sub("\s\s+" , " ", query)
 
 for regex in queries:
     match = re.findall(regex, query)
-    print(match)
     if match:
         try:
             test =  re.split("(:|>=|<=|>|<)", match[0])
