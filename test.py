@@ -8,7 +8,7 @@ queries = [
     r'\s*bcc\s*[:](?:(?!body|to|from|bcc|cc|output|subj).)*',
     r'\s*cc\s*[:](?:(?!body|to|from|bcc|cc|output|subj).)*',
     r'\s*output\s*[:](?:(?!body|to|from|bcc|cc|output|subj).)*',
-    r'\s*date\s*[\>\=](?:(?!body|to|from|bcc|cc|output|subj).)*',
+    r'\s*date\s*[\>=\<=\>\<\:](?:(?!body|to|from|bcc|cc|output|subj).)*',
 
 ]
 
